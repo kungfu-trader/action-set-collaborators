@@ -9,6 +9,7 @@ async function getCodeOwner() {
   try {
     const stats = await fs.stat(codeOwnerFile);
     const isFile = stats.isFile();
+    console.log('isFile', isFile);
     if (!isFile) {
       return '';
     }
