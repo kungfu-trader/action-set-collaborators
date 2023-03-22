@@ -1,0 +1,13 @@
+name: "Set Collaborators"
+author: "Kungfu Trader"
+description: "Set Collaborators"
+inputs:
+  token:
+    description: "github token"
+    required: true
+  manager:
+    description: "team name"
+    required: false
+runs:
+  using: "node12"
+  main: "dist/index.js"
