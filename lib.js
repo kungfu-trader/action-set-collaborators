@@ -37,24 +37,28 @@ exports.setCollaborator = async function (argv) {
   const teamQa = await getCodeOwner();
   const teamDev = argv.manager;
   console.log('QA and Developer:', teamQa, teamDev);
-  await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamQa}/repos/${argv.owner}/${argv.repo}`, {
-    org: argv.owner,
-    team_slug: teamQa,
-    owner: argv.owner,
-    repo: argv.repo,
-    permission: 'maintain',
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
-  });
-  await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamDev}/repos/${argv.owner}/${argv.repo}`, {
-    org: argv.owner,
-    team_slug: teamDev,
-    owner: argv.owner,
-    repo: argv.repo,
-    permission: 'admin',
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
-  });
+  if (teamQa) {
+    await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamQa}/repos/${argv.owner}/${argv.repo}`, {
+      org: argv.owner,
+      team_slug: teamQa,
+      owner: argv.owner,
+      repo: argv.repo,
+      permission: 'maintain',
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    });
+  }
+  if (teamDev) {
+    await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamDev}/repos/${argv.owner}/${argv.repo}`, {
+      org: argv.owner,
+      team_slug: teamDev,
+      owner: argv.owner,
+      repo: argv.repo,
+      permission: 'admin',
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    });
+  }
 };
