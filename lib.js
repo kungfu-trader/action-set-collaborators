@@ -7,8 +7,7 @@ async function getCodeOwner() {
   const cwd = process.cwd();
   const codeOwnerFile = path.join(cwd, '.github/CODEOWNERS');
   try {
-    const stats = await fs.stat(codeOwnerFile);
-    const isFile = stats.isFile();
+    const isFile = fs.existsSync(codeOwnerFile);
     console.log('isFile', isFile);
     if (!isFile) {
       return '';
@@ -55,7 +54,7 @@ exports.setCollaborator = async function (argv) {
       team_slug: teamDev,
       owner: argv.owner,
       repo: argv.repo,
-      permission: 'admin',
+      permission: 'maintain',
       headers: {
         'X-GitHub-Api-Version': '2022-11-28',
       },
