@@ -15,6 +15,7 @@ jobs:
       find-dependencies: false
     secrets:
       AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+      NODE_AUTH_TOKEN: ${{ secrets.KUNGFU_GITHUB_TOKEN }}
   
   verify:
     needs: try
