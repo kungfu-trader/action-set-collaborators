@@ -12,7 +12,9 @@ const main = async function () {
     cwd: process.cwd(),
     manager: core.getInput('manager'),
   };
-  await lib.setCollaborator(argv);
+  if (argv.token) {
+    await lib.setCollaborator(argv);
+  }
 };
 
 if (require.main === module) {
