@@ -12,10 +12,10 @@ jobs:
     uses: kungfu-trader/workflows/.github/workflows/.release-verify.yml@v1
     with:
       prebuild: false
-      list-dependencies: false
+      find-dependencies: false
     secrets:
       AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
-      AIRTABLE_API_KEY_2: ${{ secrets.AIRTABLE_API_KEY_2 }}
+      NODE_AUTH_TOKEN: ${{ secrets.KUNGFU_GITHUB_TOKEN }}
   
   verify:
     needs: try
