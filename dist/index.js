@@ -11,14 +11,14 @@ const readline = __nccwpck_require__(4521);
 
 async function getCodeOwner() {
   const cwd = process.cwd();
-  const codeOwnerFile = __nccwpck_require__.ab + "CODEOWNERS";
+  const codeOwnerFile = path.join(cwd, '.github/CODEOWNERS');
   try {
-    const stats = await fs.stat(__nccwpck_require__.ab + "CODEOWNERS");
-    const isFile = stats.isFile();
+    const isFile = fs.existsSync(codeOwnerFile);
+    console.log('isFile', isFile);
     if (!isFile) {
       return '';
     }
-    const fileStream = fs.createReadStream(__nccwpck_require__.ab + "CODEOWNERS");
+    const fileStream = fs.createReadStream(codeOwnerFile);
     const rl = readline.createInterface({
       input: fileStream,
       crlfDelay: Infinity,
@@ -41,27 +41,40 @@ exports.setCollaborator = async function (argv) {
   const octokit = github.getOctokit(argv.token);
   const teamQa = await getCodeOwner();
   const teamDev = argv.manager;
-  console.log("QA and Developer:", teamQa, teamDev);
-  await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamQa}/repos/${argv.owner}/${argv.repo}`, {
-    org: argv.owner,
-    team_slug: teamQa,
+  console.log('QA and Developer:', teamQa, teamDev);
+  await octokit.request(`PUT /repos/${argv.owner}/${argv.repo}/collaborators/songzhouran`, {
     owner: argv.owner,
     repo: argv.repo,
-    permission: 'maintain',
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  });
-  await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamDev}/repos/${argv.owner}/${argv.repo}`, {
-    org: argv.owner,
-    team_slug: teamDev,
-    owner: argv.owner,
-    repo: argv.repo,
+    username: 'songzhouran',
     permission: 'admin',
     headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
   });
+  // if (teamQa) {
+  //   await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamQa}/repos/${argv.owner}/${argv.repo}`, {
+  //     org: argv.owner,
+  //     team_slug: teamQa,
+  //     owner: argv.owner,
+  //     repo: argv.repo,
+  //     permission: 'maintain',
+  //     headers: {
+  //       'X-GitHub-Api-Version': '2022-11-28',
+  //     },
+  //   });
+  // }
+  // if (teamDev) {
+  //   await octokit.request(`PUT /orgs/${argv.owner}/teams/${teamDev}/repos/${argv.owner}/${argv.repo}`, {
+  //     org: argv.owner,
+  //     team_slug: teamDev,
+  //     owner: argv.owner,
+  //     repo: argv.repo,
+  //     permission: 'maintain',
+  //     headers: {
+  //       'X-GitHub-Api-Version': '2022-11-28',
+  //     },
+  //   });
+  // }
 };
 
 
@@ -13115,7 +13128,9 @@ const main = async function () {
     cwd: process.cwd(),
     manager: core.getInput('manager'),
   };
-  await lib.setCollaborator(argv);
+  if (argv.token) {
+    await lib.setCollaborator(argv);
+  }
 };
 
 if (require.main === require.cache[eval('__filename')]) {
